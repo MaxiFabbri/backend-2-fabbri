@@ -1,9 +1,9 @@
-import { readOne } from "../data/mongo/managers/users.manager.js"
+import { readByEmail } from "../data/mongo/managers/users.manager.js"
 
-async function verifyUser(req, res, next) {
+async function isUser(req, res, next) {
     try { 
         const { email } = req.body
-        const one = await readOne(email)
+        const one = await readByEmail(email)
         if (one) {
             const message = "INVALID CREDENTIALS - USER EXISTS"
             return res.status(401).json({ message }) 
@@ -15,4 +15,4 @@ async function verifyUser(req, res, next) {
     }
 }
 
-export default verifyUser
+export default isUser

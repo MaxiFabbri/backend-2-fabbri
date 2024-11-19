@@ -1,30 +1,13 @@
-// import { model, Schema } from "mongoose";
-
-// const collection = "products"
-// // ingles
-// // plural
-// // minusculas
-// // representativo del recurso
-// const schema = new Schema({
-//     title: { type: String, required: true, index: true },
-//     price: { type: Number, default: 10 },
-//     stock: { type: Number, default: 10 },
-//     category: { type: String, enum: ["celulares","tablets","computadoras"], default: "computadoras"}
-// })
-
-// const Product = model(collection, schema)
-// export default Product
-
-// Backend 1
-import { model, Schema } from 'mongoose'
+import mongoose from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
 import "dotenv/config.js"
+import config from '../../../utils/config.js'
 
-// mongoose.pluralize(null)
+mongoose.pluralize(null)
 
-const collection = process.env.PRODUCTS_COLLECTION
+const collection = config.PRODUCTS_COLLECTION
 
-const schema = new Schema({
+const schema = new mongoose.Schema({
     title: {type: String, required: true },
     description: {type: String, required: true },
     code: {type: String, required: true },
@@ -36,6 +19,6 @@ const schema = new Schema({
 })
 schema.plugin(mongoosePaginate)
 
-const productModel = model(collection, schema)
+const Product = mongoose.model(collection, schema)
 
-export default productModel
+export default Product

@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
+import config from '../../../utils/config.js'
 
-const collection = "users"
+const collection = config.USERS_COLLECTION
 // ingles
 // plural
 // minusculas

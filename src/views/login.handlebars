@@ -1,0 +1,64 @@
+<body>
+    {{!-- Hago un pequeño Navbar para navegar a otras páginas --}}
+    <nav class="navbar">
+        <div style="font-size: 25px">Logo</div>
+        <h2>Bienvenido</h2>
+        <ul class="nav nav-pills nav-fill">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="product-input">
+        <h3>PLEASE LOGIN:</h3>
+        <form id="loginForm">
+            <div class="input-element">
+                <label for="email">email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="input-element">
+                <label for="password">password:</label>
+                <input type="text" id="password" name="password" required>
+            </div>
+            {{!-- <button class="input-element" type="submit" id="login">Enviar</button> --}}
+            <button type="button" id="login">Enviar</button>
+        </form>
+        <a href="/register">Register</a>
+
+        {{!-- <form action="./api/sessions/online" method="post" class="input-element" id="isonline">
+            <button type="submit">is Online?</button>
+        </form>
+        <form action="./api/sessions/signout" method="post" class="input-element" id="signout">
+            <button type="submit">Sign Out</button>
+        </form> --}}
+    </div>
+</body>
+<script>
+    function sendOnClick() {
+
+        const data = {
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
+        }
+        try {
+            let options = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            };
+            fetch(`/api/sessions/login`, options)
+                .then((res) => res.json())
+                .then((res) => {
+                    console.log("Response: ", res)
+                    document.getElementById('loginForm').reset();
+
+                })
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+
+    const sendButton = document.getElementById("login")
+    sendButton.onclick = () => sendOnClick()
+</script>

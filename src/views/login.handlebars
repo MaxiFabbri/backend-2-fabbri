@@ -9,6 +9,9 @@
             </li>
         </ul>
     </nav>
+
+
+
     <div class="product-input">
         <h3>PLEASE LOGIN:</h3>
         <form id="loginForm">
@@ -23,19 +26,21 @@
             {{!-- <button class="input-element" type="submit" id="login">Enviar</button> --}}
             <button type="button" id="login">Enviar</button>
         </form>
-        <a href="/register">Register</a>
+        {{!-- <button type="button" id="googleLogin">Login con Google</button> --}}
+        <div>
+            <a href="/register">Register</a>
+        </div>
 
-        {{!-- <form action="./api/sessions/online" method="post" class="input-element" id="isonline">
-            <button type="submit">is Online?</button>
+        <form class="input-element">
+            <button type="button" id="isOnline">is Online?</button>
         </form>
-        <form action="./api/sessions/signout" method="post" class="input-element" id="signout">
+        {{!-- <form action="./api/sessions/signout" method="post" class="input-element" id="signout">
             <button type="submit">Sign Out</button>
         </form> --}}
     </div>
 </body>
 <script>
-    function sendOnClick() {
-
+    async function sendOnClick() {
         const data = {
             email: document.getElementById('email').value,
             password: document.getElementById('password').value
@@ -46,19 +51,68 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
             };
-            fetch(`/api/sessions/login`, options)
-                .then((res) => res.json())
-                .then((res) => {
-                    console.log("Response: ", res)
-                    document.getElementById('loginForm').reset();
-
-                })
+            let response = await fetch(`/api/sessions/login`, options)
+            response = await response.json()
+            console.log("response: ", response.response)
+            if (response) {
+                alert("USER LOGUED IN")
+                //location.replace("/")
+            } else {
+                alert("INVALID CREDENTIALS")
+            }
         } catch (error) {
-            alert(error)
+            alert(error.message)
+        }
+    }
+
+    async function verifyOnline() {
+        try {
+            let options = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                Headers: JSON.stringify(),
+            };
+
+            console.log("response Online: ")
+            if (token) {
+                alert("USER ONLINE ", token)
+                //location.replace("/")
+            } else {
+                alert("INVALID CREDENTIALS")
+            }
+        } catch (error) {
+            alert(error.message)
         }
     }
 
 
+    /* function sendToGoogle() {
+        const data = {
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
+        }
+        console.log("Send To Google data: ",data)
+        try {
+            let options = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            };
+            fetch(`/api/sessions/google`, options)
+                .then((res) => res.json())
+                .then((res) => {
+                    console.log("Response: ", res)
+                })
+        } catch (error) {
+            alert(error)
+        }
+    } */
+
+    //const googleLogin = document.getElementById("googleLogin")
     const sendButton = document.getElementById("login")
+    const isOnlineButton = document.getElementById("isOnline")
     sendButton.onclick = () => sendOnClick()
+    isOnlineButton.onclick = () => verifyOnline()
+    //googleLogin.onclick = () => window.location.href = "/api/sessions/google"
+    // googleLogin.onclick = () => sendToGoogle()
 </script>

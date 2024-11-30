@@ -1,14 +1,16 @@
-import mongoose, { Types } from 'mongoose'
-import "dotenv/config.js"
+import { model, Schema, Types } from "mongoose";
 
-mongoose.pluralize(null)
-
-const collection = process.env.CART_COLLECTION
-
-const schema = new mongoose.Schema({
-    product: { type: [{ _id: mongoose.Schema.Types.ObjectId, qty: Number }], required: true, ref: config.PRODUCTS_COLLECTION}
+const collection = "carts"
+// ingles
+// plural
+// minusculas
+// representativo del recurso
+const schema = new Schema({
+    product_id: { type: Types.ObjectId, ref: "products", required: true },
+    user_id: { type: Types.ObjectId, ref: "users", required: true },
+    quantity: { type: Number, required: true },
+    state: { type: String, enum: ["reserved","paid","delivered"], default: "reserved"}
 })
 
-const cartModel = mongoose.model(collection, schema)
-
-export default cartModel
+const Cart = model(collection, schema)
+export default Cart

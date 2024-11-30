@@ -1,7 +1,6 @@
 import { model, Schema } from "mongoose";
-import config from '../../../utils/config.js'
 
-const collection = config.USERS_COLLECTION
+const collection = "users"
 // ingles
 // plural
 // minusculas
@@ -12,7 +11,8 @@ const schema = new Schema({
     password: { type: String, required: true },
     role: { type: String, default: 'USER', enum: ['USER','ADMIN','PREM'] },
     verifyUser: { type: Boolean, default: false },
-    verifyCode: { type: String, default: "1234" }
+    verifyCode: { type: String, default: "1234" },
+    isOnline: { type: Boolean, default: false }
 })
 
 const User = model(collection, schema)

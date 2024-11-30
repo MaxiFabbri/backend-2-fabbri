@@ -1,86 +1,48 @@
-import {Router} from 'express';
-import userModel from '../../data/mongo/models/user.model.js';
+import CustomRouter from "../../utils/CustomRouter.util.js";
+import {
+    create,
+    read,
+    update,
+    destroy,
+} from "../../data/mongo/managers/users.manager.js";
 
-const router = Router();
-
-// Consultar todos los usuarios
-router.get('/', async (req, res) => {
-
-    try {
-        const result = await userModel.find();
-        res.send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(500).send({
-            status: 'error',
-            message: error.message
-        });
+class UsersApiRouter extends CustomRouter {
+    constructor() {
+        super();
+        this.init();
     }
-});
+    init = () => {
+        this.create("/", ["ADMIN"], createUser);
+        this.read("/", ["ADMIN"], readUsers);
+        this.update("/:id", ["USER", "ADMIN"], updateUser);
+        this.destroy("/:id", ["USER", "ADMIN"], destroyUser);
+    };
+}
 
-// Crear un usuario
-router.post('/', async (req, res) => {
-    
-    const {name, age, email} = req.body;
-    try {
-        const result = await userModel.create({name, age, email});
-        res.send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
+const usersApiRouter = new UsersApiRouter();
+export default usersApiRouter.getRouter();
 
-// Actualizar un usuario
-router.put('/:uid', async (req, res) => {
-    const uid = req.params.uid;
-    const {name, age, email} = req.body;
-    try {
-        const user = await userModel.findOne({_id: uid});
-        if (!user) throw new Error('User not found');
-
-        const newUser = {
-            name: name ?? user.name,
-            age: age ?? user.age,
-            email: email ?? user.email
-        }
-
-        const updateUser = await userModel.updateOne({_id: uid}, newUser);
-        res.send({
-            status: 'success',
-            payload: updateUser
-        });
-
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
-
-// Eliminar un usuario
-router.delete('/:uid', async (req, res) => {
-    const uid = req.params.uid;
-    try {
-        const result = await userModel.deleteOne({_id: uid});
-        res.status(200).send({
-            status: 'success',
-            payload: result
-        });
-    } catch (error) {
-        res.status(400).send({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
-
-export default router;
+async function createUser(req, res) {
+    const message = "USER CREATED";
+    const data = req.body;
+    const response = await create(data);
+    return res.status(201).json({ response, message });
+}
+async function readUsers(req, res) {
+    const message = "USERS FOUND";
+    const response = await read();
+    return res.status(200).json({ response, message });
+}
+async function updateUser(req, res) {
+    const { id } = req.params;
+    const data = req.body;
+    const message = "USER UPDATED";
+    const response = await update(id, data);
+    return res.status(200).json({ response, message });
+}
+async function destroyUser(req, res) {
+    const { id } = req.params;
+    const message = "USER DELETED";
+    const response = await destroy(id);
+    return res.status(200).json({ response, message });
+}

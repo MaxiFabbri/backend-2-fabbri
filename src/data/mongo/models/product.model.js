@@ -1,24 +1,20 @@
-import mongoose from 'mongoose'
-import mongoosePaginate from 'mongoose-paginate-v2'
-import "dotenv/config.js"
-import config from '../../../utils/config.js'
+import { model, Schema } from "mongoose";
 
-mongoose.pluralize(null)
-
-const collection = config.PRODUCTS_COLLECTION
-
-const schema = new mongoose.Schema({
-    title: {type: String, required: true },
+const collection = "products"
+// ingles
+// plural
+// minusculas
+// representativo del recurso
+const schema = new Schema({
+    title: {type: String, required: true, index: true },
     description: {type: String, required: true },
-    code: {type: String, required: true },
-    price: {type: Number, required: true },
-    status: {type: Boolean, required: false},
-    stock: {type: Number, required: true },
-    category: {type: String, required: true },
+    code: {type: String, required: false },
+    price: {type: Number, required: true, default: 1000 },
+    status: {type: Boolean, required: true, default: true},
+    stock: {type: Number, required: true, default: 10 },
+    category: {type: String, enum: ["bazar","electro","textil","grafica"], required: true, default: "bazar" },
     thumbnails: {type:[String], required: false}
 })
-schema.plugin(mongoosePaginate)
 
-const Product = mongoose.model(collection, schema)
-
+const Product = model(collection, schema)
 export default Product

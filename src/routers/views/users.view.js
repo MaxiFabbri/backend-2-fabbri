@@ -5,23 +5,6 @@ import { create, read, readById, readByEmail, update, destroy } from "../../data
 const usersViewsRouter = Router()
 
 usersViewsRouter.get("/",(req, res, next) => {
-    // isOnline()
-    
-    // if(!data.online) { 
-    //     return res.render('login', data)
-    // } else {
-    //     return location.replace("/products")
-    // }
-    // const data = {
-    //     online: false
-    // }
-    // console.log("Views Router data online: ",data)
-    // if(req.session.user_id) {
-    //     data.online = true 
-    //     // return location.replace("/products")
-    //     return res.render('login', data)
-    // }
-    // console.log("Session ", req.session.user_id," data: ",data )
     return res.render('index')
 })
 usersViewsRouter.get("/login", (req,res,next) => {

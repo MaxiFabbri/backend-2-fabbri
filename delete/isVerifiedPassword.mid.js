@@ -1,4 +1,4 @@
-import { readByEmail } from "../data/mongo/managers/users.manager.js"
+import { readByEmail } from "../src/data/mongo/managers/users.manager.js"
 
 async function isVerifyPassword(req, res, next) {
     try {

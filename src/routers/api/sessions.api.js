@@ -11,7 +11,7 @@ class SessionsApiRouter extends CustomRouter {
     this.create("/register", ["PUBLIC"], passportCb("register"), register);
     this.create("/login", ["PUBLIC"], passportCb("login"), login);
     this.create("/signout", ["USER", "ADMIN"], passportCb("signout"), signout);
-    this.create("/online", ["USER", "ADMIN"], passportCb("online"), onlineToken);
+    this.create("/online", ["USER", "ADMIN"], passportCb("online"), online);
     this.read("/google", ["PUBLIC"], passportCb("google", { scope: ["email", "profile"] }));
     this.read("/google/cb", ["PUBLIC"], passportCb("google"), google);
   };
@@ -38,28 +38,12 @@ function signout(req, res, next) {
   const response = "OK";
   return res.clearCookie("token").json200(response, message);
 }
-async function online(req, res, next) {
-  const { user_id } = req.session;
-  const one = await readById(user_id);
-  if (req.session.user_id) {
-    const message = one.email + " is online";
-    const response = true;
-    return res.json200(response, message);
-  } else {
-    const message = "User is not online";
-    return res.json400(message);
-  }
-}
 function google(req, res, next) {
   return res.status(200).json({ message: "USER LOGGED IN", token: req.token });
 }
-async function onlineToken(req, res, next) {
+async function online(req, res, next) {
   return res.status(200).json({
     message: req.user.email.toUpperCase() + " IS ONLINE",
     online: true,
   });
-}
-function test(req, res,next) {
-  console.log("Test req: ", req)
-  return next()  
 }

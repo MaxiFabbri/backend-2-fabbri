@@ -13,7 +13,6 @@ class IndexRouter extends CustomRouter {
   };
 }
 
-let indexRouter = new IndexRouter();
-indexRouter = indexRouter.getRouter();
-export default indexRouter
+const indexRouter = new IndexRouter();
+export default indexRouter.getRouter()
 

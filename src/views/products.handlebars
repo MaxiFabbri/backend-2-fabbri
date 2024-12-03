@@ -7,6 +7,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="/products/newproduct">Cargar Producto</a>
             </li>
+            <li>
+                <button type="button" id="signOut">SignOut</button>
+            </li>
         </ul>
     </nav>
     {{!-- Hago la lista de productos --}}
@@ -49,6 +52,29 @@
     crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.1/dist/sweetalert2.all.min.js"></script>
 <script>
+    async function signOut() {
+        try {
+            let options = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+            };
+            let response = await fetch(`/api/sessions/signout`, options)
+            response = await response.json()
+            console.log("response: ", response.response)
+            if (response) {
+                alert("Signed Out")
+                location.replace("/")
+            } else {
+                alert("INVALID CREDENTIALS")
+            }
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
+    const signOutButton = document.getElementById("signOut")
+    signOutButton.onclick = () => signOut()
+
     /*//Funcion para crear un nuevo Cart
     const createCart = async () => {
         try {

@@ -121,31 +121,31 @@ passport.use("signout",
   );
 
 
-passport.use("admin", new LocalStrategy(
-    { passReqToCallback: true, usernameField: "email" },
-    async (req, done) => {
-        try {
-            //recuperar el token
-            const token = req.token;
-            //destokenizar el user_id y el rol
-            const { role, user_id } = verifyTokenUtil(token);
-            //ver si el Rol es ADMIN
-            if (role !== "ADMIN") {
-                const error = new Error("UNAUTHORIZED");
-                error.statusCode = 403;
-                return done(error);
-            }
-            // Recuperar los datos del User en base al ID
-            const user = await readById(user_id);
-            // Borro la contraseña para que no circule por el Front
-            user.password = null;
-            // Devolver el user
-            return done(null, user);
-        } catch (error) {
-            return done(error)
-        }
-    }
-))
+// passport.use("admin", new LocalStrategy(
+//     { passReqToCallback: true, usernameField: "email" },
+//     async (req, done) => {
+//         try {
+//             //recuperar el token
+//             const token = req.token;
+//             //destokenizar el user_id y el rol
+//             const { role, user_id } = verifyTokenUtil(token);
+//             //ver si el Rol es ADMIN
+//             if (role !== "ADMIN") {
+//                 const error = new Error("UNAUTHORIZED");
+//                 error.statusCode = 403;
+//                 return done(error);
+//             }
+//             // Recuperar los datos del User en base al ID
+//             const user = await readById(user_id);
+//             // Borro la contraseña para que no circule por el Front
+//             user.password = null;
+//             // Devolver el user
+//             return done(null, user);
+//         } catch (error) {
+//             return done(error)
+//         }
+//     }
+// ))
 
 
 

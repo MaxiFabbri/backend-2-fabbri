@@ -1,7 +1,7 @@
 import CustomRouter from "../../utils/CustomRouter.util.js";
 import {
   create,
-  read,
+  readByUserId,
   update,
   destroy,
 } from "../../data/mongo/managers/carts.manager.js";
@@ -23,17 +23,21 @@ const cartsApiRouter = new CartsApiRouter();
 export default cartsApiRouter.getRouter();
 
 async function createCart(req, res) {
+  console.log("create cart: ", req.user)
   const message = "CART CREATED";
-  const data = req.body;
+  let data = req.body;
+  data.user_id = req.user._id
   const response = await create(data);
   return res.status(201).json({ response, message });
 }
+
 async function readCartsFromUser(req, res) {
   const { user_id } = req.params;
-  const message = "CARTS FOUND";
-  const response = await read({ user_id });
+  const response = await readByUserId({ user_id });
+  const message = "CART FOUND";
   return res.status(200).json({ response, message });
 }
+
 async function updateCart(req, res) {
   const { id } = req.params;
   const data = req.body;
@@ -41,9 +45,10 @@ async function updateCart(req, res) {
   const response = await update(id, data);
   return res.status(200).json({ response, message });
 }
+
 async function destroyCart(req, res) {
   const { id } = req.params;
-  const message = "CART DELETED";
   const response = await destroy(id);
+  const message = "CART DELETED";
   return res.status(200).json({ response, message });
 }

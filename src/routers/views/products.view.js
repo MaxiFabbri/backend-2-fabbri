@@ -1,44 +1,60 @@
-import { Router } from "express";
-import { read } from "../../data/mongo/managers/products.manager.js";
-import ProductController from '../../data/mongo/managers/products.manager.js';
+import CustomRouter from "../../utils/CustomRouter.util.js";
 
-const controller = new ProductController
+class ProductsViewsRouter extends CustomRouter {
+    constructor() {
+        super();
+        this.init();
+    }
+    init = () => {
+        //this.use("/carts", ["USER", "ADMIN"], cartsViewRouter)
+        this.use("/newproduct", ["ADMIN"], renderNewProduct);
+        this.use("/:id?", ["USER", "ADMIN"], renderProducts);
+    };
+}
 
-const productsViewsRouter = Router()
+const productsViewsRouter = new ProductsViewsRouter();
+export default productsViewsRouter.getRouter();
 
-productsViewsRouter.get("/newproduct", (req,res,next) => {
-    console.log("newproduct render")
+
+function renderNewProduct (req, res, next) {
     return res.render('newproduct')
-})
-
-productsViewsRouter.get("/:id?",async (req, res, next) => {    
-    const { id }  = req.params;
+}
+ 
+async function renderProducts(req, res, next) {
+    const { id } = req.params;
     var filter = {}
     var sort = {}
     if (id) {
         filter = { _id: id }
     } else if (req.query.category || req.query.stock || req.query.sort) {
-        if(req.query.category) {filter.category =  req.query.category};
-        if(req.query.stock) {filter.stock = { $gt: parseInt(req.query.stock)}}
-        if(req.query.sort){
+        if (req.query.category) { filter.category = req.query.category };
+        if (req.query.stock) { filter.stock = { $gt: parseInt(req.query.stock) } }
+        if (req.query.sort) {
             if (req.query.sort === 'asc') {
-                sort = {price: 1}
-            } else if (req.query.sort === 'desc'){
-                sort = {price: -1}
+                sort = { price: 1 }
+            } else if (req.query.sort === 'desc') {
+                sort = { price: -1 }
             } else {
                 sort = {}
             }
         }
-    } 
-    const limitNumber = req.query.limit || 10; 
+    }
+    const limitNumber = req.query.limit || 10;
     const pg = req.query.page || 1;
-    const data = await controller.get(limitNumber, pg, filter, sort)
-    if(data) {
-        res.status(200).render('products', {products: data});
+    //console.log("get products: ", limitNumber, " pg ", pg, " filter ", filter, " Sort: ", sort)
+    
+    const url = `http://localhost:9000/api/products?limit=${limitNumber}&page=${pg}`
+    const options = {
+        headers: { "Content-Type": "application/json" },
+    };
+    
+    let response = await fetch(url, options)
+    response = await response.json()
+    const data = response.response
+
+    if (data) {
+        res.status(200).render('products', { products: data });
     } else {
         res.status(404).send({ error: 'Dato invalido', data: "" });
     }
-})
-
-
-export default productsViewsRouter
+}

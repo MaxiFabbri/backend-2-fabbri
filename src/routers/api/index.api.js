@@ -13,6 +13,7 @@ class ApiRouter extends CustomRouter {
     this.use("/users", ["PUBLIC"], usersApiRouter);
     this.use("/products", ["PUBLIC"], productsApiRouter);
     this.use("/carts", ["PUBLIC"], cartsApiRouter);
+    this.use("/auth", ["PUBLIC"], sessionsApiRouter)
     this.use("/sessions", ["PUBLIC"], sessionsApiRouter);
   };
 }

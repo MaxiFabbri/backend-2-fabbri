@@ -22,7 +22,6 @@ class Manager {
         }
     }
 
-    // hay que actualizarlo para que busque por ID
     readById = async (id) => {
         try {
             const one = await this.model.findOne({ _id: id }).lean()
@@ -54,6 +53,32 @@ class Manager {
     destroy = async (id) => {
         try {
             const one = await this.model.findByIdAndDelete(id)
+            return one
+        } catch (error) {
+            throw error
+        }
+    }
+
+    // Metodo para ver productos con paginados, filtrados y ordenados
+    readPaginated = async (limitNumber, pg, filter, sort) => {
+        try {
+            const all = await this.model.paginate(filter, {
+                limit: limitNumber,
+                page: pg,
+                sort: sort,
+                lean: true
+            });
+            return all
+        } catch (error) {
+            throw error
+        }
+    }
+
+    // Metodo para recuperar los datos del Cart dependiendo del User_id
+    readByUserId = async (id) => {
+        try {
+            const { user_id } = id
+            const one = await this.model.findOne({ user_id }).lean()
             return one
         } catch (error) {
             throw error

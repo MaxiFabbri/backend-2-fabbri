@@ -2,12 +2,10 @@ import CustomRouter from "../../utils/CustomRouter.util.js";
 import {
   create,
   read,
+  readPaginated,
   update,
   destroy,
 } from "../../data/mongo/managers/products.manager.js";
-import passportCb from "../../middlewares/passportCb.mid.js";
-import verifyToken from "../../middlewares/verifyToken.mid.js";
-import isAdmin from "../../middlewares/isAdmin.mid.js";
 
 class ProductsApiRouter extends CustomRouter {
   constructor() {
@@ -15,10 +13,10 @@ class ProductsApiRouter extends CustomRouter {
     this.init();
   }
   init = () => {
-    this.create("/", ["ADMIN"], verifyToken, isAdmin, createProduct);
-    this.read("/", ["PUBLIC"], readProducts);
-    this.update("/:id", ["ADMIN"], passportCb("admin"), updateProduct);
-    this.destroy("/:id", ["ADMIN"], passportCb("admin"), destroyProduct);
+    this.create("/", ["ADMIN"], createProduct);
+    this.read("/:id?", ["PUBLIC"], readPaginatedProducts)
+    this.update("/:id", ["ADMIN"], updateProduct);
+    this.destroy("/:id", ["ADMIN"], destroyProduct);
   };
 }
 
@@ -35,6 +33,34 @@ async function readProducts(req, res) {
   const message = "PRODUCTS FOUND";
   const response = await read();
   if (response.length > 0) {
+    return res.json200(response, message);
+  }
+  return res.json404();
+}
+async function readPaginatedProducts(req, res) {
+  const { id } = req.params;
+  var filter = {}
+  var sort = {}
+  if (id) {
+    filter = { _id: id }
+  } else if (req.query.category || req.query.stock || req.query.sort) {
+    if (req.query.category) { filter.category = req.query.category };
+    if (req.query.stock) { filter.stock = { $gt: parseInt(req.query.stock) } }
+    if (req.query.sort) {
+      if (req.query.sort === 'asc') {
+        sort = { price: 1 }
+      } else if (req.query.sort === 'desc') {
+        sort = { price: -1 }
+      } else {
+        sort = {}
+      }
+    }
+  }
+  const limitNumber = req.query.limit || 10;
+  const pg = req.query.page || 1;
+  const message = "PRODUCTS FOUND";
+  const response = await readPaginated(limitNumber, pg, filter, sort);
+  if (response.totalDocs > 0) {
     return res.json200(response, message);
   }
   return res.json404();

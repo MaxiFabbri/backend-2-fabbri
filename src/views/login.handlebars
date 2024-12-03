@@ -31,11 +31,8 @@
             <a href="/register">Register</a>
         </div>
 
-        <form class="input-element">
+        {{!-- <form class="input-element">
             <button type="button" id="isOnline">is Online?</button>
-        </form>
-        {{!-- <form action="./api/sessions/signout" method="post" class="input-element" id="signout">
-            <button type="submit">Sign Out</button>
         </form> --}}
     </div>
 </body>
@@ -56,7 +53,7 @@
             console.log("response: ", response.response)
             if (response) {
                 alert("USER LOGUED IN")
-                //location.replace("/")
+                location.replace("/products")
             } else {
                 alert("INVALID CREDENTIALS")
             }
@@ -65,18 +62,19 @@
         }
     }
 
-    async function verifyOnline() {
+    /*async function verifyOnline() {
         try {
             let options = {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 Headers: JSON.stringify(),
             };
-
-            console.log("response Online: ")
-            if (token) {
-                alert("USER ONLINE ", token)
-                //location.replace("/")
+            let response = await fetch(`/api/sessions/online`, options)
+            response = await response.json()
+            console.log("response: ", response)
+            if (response.online) {
+                alert(response.message)
+                location.replace("/products")
             } else {
                 alert("INVALID CREDENTIALS")
             }
@@ -86,7 +84,7 @@
     }
 
 
-    /* function sendToGoogle() {
+    function sendToGoogle() {
         const data = {
             email: document.getElementById('email').value,
             password: document.getElementById('password').value
@@ -106,13 +104,15 @@
         } catch (error) {
             alert(error)
         }
-    } */
+    } 
 
-    //const googleLogin = document.getElementById("googleLogin")
+    const googleLogin = document.getElementById("googleLogin")
+    googleLogin.onclick = () => window.location.href = "/api/sessions/google"
+    googleLogin.onclick = () => sendToGoogle() */
+    
     const sendButton = document.getElementById("login")
     const isOnlineButton = document.getElementById("isOnline")
     sendButton.onclick = () => sendOnClick()
     isOnlineButton.onclick = () => verifyOnline()
-    //googleLogin.onclick = () => window.location.href = "/api/sessions/google"
-    // googleLogin.onclick = () => sendToGoogle()
+
 </script>

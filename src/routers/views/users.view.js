@@ -1,32 +1,32 @@
-import { Router } from "express";
-import { create, read, readById, readByEmail, update, destroy } from "../../data/mongo/managers/users.manager.js";
-// import __dirname from "../../utils.js"
+//import { Router } from "express";
+import CustomRouter from "../../utils/CustomRouter.util.js";
 
-const usersViewsRouter = Router()
+class UsersViews extends CustomRouter {
+    constructor() {
+        super();
+        this.init();
+    }
+    init = () => {
+        this.use("/login", ["PUBLIC"], renderLogin)
+        this.use("/register", ["PUBLIC"], renderRegister)
+        this.use("/", ["PUBLIC"], renderIndex)
+    };
+}
 
-usersViewsRouter.get("/",(req, res, next) => {
+const usersViewsRouter = new UsersViews();
+export default usersViewsRouter.getRouter()
+
+function renderIndex (req, res, next) {
+    console.log("index render")
     return res.render('index')
-})
-usersViewsRouter.get("/login", (req,res,next) => {
+}
+
+function renderLogin (req, res, next) {
+    console.log("login render")
     return res.render('login')
-})
+}
 
-usersViewsRouter.get("/register", (req,res,next) => {
+function renderRegister (req, res, next) {
+    console.log("register render")
     return res.render('register')
-})
-
-
-export default usersViewsRouter
-
-// async function isOnline (req, res, next) {
-//     console.log("isOnline Runing ", req)
-//     const data = {
-//         online: false
-//     }
-//     if(req.session.user_id) {
-//         data.online = true 
-//         return data
-//     }
-//     console.log("Session ", req.session.user_id," data: ",data )
-//     return data
-// }
+}

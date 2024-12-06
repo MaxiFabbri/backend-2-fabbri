@@ -1,6 +1,7 @@
 import CustomRouter from "../../utils/CustomRouter.util.js";
 import { readById } from "../../data/mongo/managers/users.manager.js";
 import passportCb from "../../middlewares/passportCb.mid.js";
+import passport from "../../middlewares/passport.mid.js";
 
 class SessionsApiRouter extends CustomRouter {
   constructor() {
@@ -12,8 +13,9 @@ class SessionsApiRouter extends CustomRouter {
     this.create("/login", ["PUBLIC"], passportCb("login"), login);
     this.create("/signout", ["USER", "ADMIN"], passportCb("signout"), signout);
     this.create("/online", ["USER", "ADMIN"], passportCb("online"), online);
-    this.read("/google", ["PUBLIC"], passportCb("google", { scope: ["email", "profile"] }));
-    this.read("/google/cb", ["PUBLIC"], passportCb("google"), google);
+    //this.read("/google", ["PUBLIC"], passportCb("google", { scope: ["email", "profile"] }));
+    this.read("/google", ["PUBLIC"], passport.authenticate("google", { scope: ["email", "profile"] }));
+    this.read("/google/cb", ["PUBLIC"], passport.authenticate('google', { session: false }), login);
   };
 }
 
@@ -39,11 +41,24 @@ function signout(req, res, next) {
   return res.clearCookie("token").json200(response, message);
 }
 function google(req, res, next) {
-  return res.status(200).json({ message: "USER LOGGED IN", token: req.token });
+  //const { token } = req.user;
+  //const opts = { maxAge: 60 * 60 * 24 * 7, httpOnly: true };
+  const message = "Google User logged in!";
+  const response = "OK";
+  return res.json200(response, message);
+  //return res.cookie("token", token, opts).json200(response, message);
+  //return res.status(200).json({ message: "GOOGLE USER LOGGED IN", token: req.token });
 }
 async function online(req, res, next) {
   return res.status(200).json({
     message: req.user.email.toUpperCase() + " IS ONLINE",
+    online: true,
+  });
+}
+function test(req, res, next) {
+  console.log("Test ", req.headers)
+  return res.status(200).json({
+    message: " IS ONLINE",
     online: true,
   });
 }

@@ -1,26 +1,27 @@
-import "dotenv/config.js"
+import envUtil from "./src/utils/env.util.js"
 import express from "express"
 import morgan from "morgan"
 import cookieParser from "cookie-parser"
 import session from "express-session"
-// import sessionFileStore from "session-file-store"
 import MongoStore from "connect-mongo"
 import __dirname from "./src/utils.js"
-
 import handlebars from 'express-handlebars';
-
 import pathHandler from "./src/middlewares/pathHandler.mid.js"
 import errorHandler from "./src/middlewares/errorHandler.mid.js"
 import indexRouter from "./src/routers/index.router.js"
 import dbConnect from "./src/utils/dbConnect.util.js"
-import config from "./src/utils/config.js"
+import argsUtil from "./src/utils/args.util.js"
 
 //Server
 const server = express()
-const port = process.env.PORT
+const port = envUtil.PORT
 const ready = () => {
-    console.log(`Server ready on port: ${port}`)
-    dbConnect()
+    console.log("Server ready on port: ",port);
+    console.log("Server on mode:", argsUtil.env, "- Persisitence:",argsUtil.persistence)
+    if(argsUtil.persistence === "mongo"){
+        dbConnect()
+    }
+    
 }
 server.listen(port, ready)
 
@@ -37,21 +38,19 @@ server.use('/static', express.static('public'))
 server.use(express.json())
 server.use(express.urlencoded({ extended: true }))
 server.use(morgan("dev"))
-server.use(cookieParser(process.env.SECRET_KEY))
+server.use(cookieParser(envUtil.SECRET_KEY))
 
 server.use(session({
-    secret: process.env.SECRET_KEY,
+    secret: envUtil.SECRET_KEY,
     resave: true,
     saveUninitialized: false,
-    store: new MongoStore({ mongoUrl: process.env.MONGO_LINK, ttl: 60*60*24})
+    store: new MongoStore({ mongoUrl: envUtil.MONGO_LINK, ttl: 60*60*24})
 }))
 
 // Routes
 server.use(indexRouter)
 
-
 // Middlewares
 server.use(errorHandler)
 server.use(pathHandler)
-
 

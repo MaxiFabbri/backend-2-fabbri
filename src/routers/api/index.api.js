@@ -3,6 +3,7 @@ import cartsApiRouter from "./carts.api.js";
 import productsApiRouter from "./products.api.js";
 import sessionsApiRouter from "./sessions.api.js";
 import usersApiRouter from "./users.api.js";
+import sum from "../../utils/process.util.js";
 
 class ApiRouter extends CustomRouter {
   constructor() {
@@ -15,6 +16,16 @@ class ApiRouter extends CustomRouter {
     this.use("/carts", ["PUBLIC"], cartsApiRouter);
     this.use("/auth", ["PUBLIC"], sessionsApiRouter)
     this.use("/sessions", ["PUBLIC"], sessionsApiRouter);
+    this.read("/sum", ["PUBLIC"], (req, res) => {
+      const response = sum();
+      const message = "SUMATORIA OBTENIDA";
+      return res.json200(response, message);
+      // const child = fork("./src/utils/process.util.js");
+      // child.send("start");
+      // child.on("message", (response) => {
+      //   const message = "SUMATORIA OBTENIDA";
+      //   return res.json200(response, message);
+      });
   };
 }
 

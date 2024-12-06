@@ -26,7 +26,7 @@
             {{!-- <button class="input-element" type="submit" id="login">Enviar</button> --}}
             <button type="button" id="login">Enviar</button>
         </form>
-        {{!-- <button type="button" id="googleLogin">Login con Google</button> --}}
+        <button type="button" id="googleLogin">Login con Google</button>
         <div>
             <a href="/register">Register</a>
         </div>
@@ -81,7 +81,7 @@
         } catch (error) {
             alert(error.message)
         }
-    }
+    }*/
 
 
     function sendToGoogle() {
@@ -101,6 +101,13 @@
                 .then((res) => {
                     console.log("Response: ", res)
                 })
+            console.log("response: ", response.response)
+            if (response) {
+                alert("USER LOGUED IN")
+                location.replace("/products")
+            } else {
+                alert("INVALID CREDENTIALS")
+            }    
         } catch (error) {
             alert(error)
         }
@@ -108,11 +115,11 @@
 
     const googleLogin = document.getElementById("googleLogin")
     googleLogin.onclick = () => window.location.href = "/api/sessions/google"
-    googleLogin.onclick = () => sendToGoogle() */
+    //googleLogin.onclick = () => sendToGoogle()
     
     const sendButton = document.getElementById("login")
-    const isOnlineButton = document.getElementById("isOnline")
+    //const isOnlineButton = document.getElementById("isOnline")
     sendButton.onclick = () => sendOnClick()
-    isOnlineButton.onclick = () => verifyOnline()
+    //isOnlineButton.onclick = () => verifyOnline()
 
 </script>

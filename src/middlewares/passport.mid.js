@@ -3,7 +3,7 @@ import envUtil from "../utils/env.util.js";
 import { Strategy as LocalStrategy } from "passport-local"
 import { Strategy as GoogleStrategy } from "passport-google-oauth2"
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import { create, readByEmail, readById, update } from "../data/mongo/managers/users.manager.js"
+import { create, readByEmail, readById, update } from "../dao/mongo/managers/users.manager.js"
 import { createHashUtil, verifyHashUtil } from "../utils/hash.util.js"
 import { createTokenUtil, verifyTokenUtil } from "../utils/token.util.js"
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL } = envUtil

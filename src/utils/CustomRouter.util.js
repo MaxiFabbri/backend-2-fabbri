@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyTokenUtil } from "../utils/token.util.js"
-import { readById } from "../data/mongo/managers/users.manager.js";
+import { readById } from "../dao/mongo/managers/users.manager.js";
 
 class CustomRouter {
   constructor() {

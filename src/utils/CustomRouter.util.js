@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { verifyTokenUtil } from "../utils/token.util.js"
-import { readById } from "../dao/mongo/managers/users.manager.js";
+// import { readById } from "../dao/mongo/managers/users.manager.js";
+import { readUserByIdService} from "../services/users.service.js"
 
 class CustomRouter {
   constructor() {
@@ -40,7 +41,7 @@ class CustomRouter {
         (policies.includes("USER") && role === "USER") ||
         (policies.includes("ADMIN") && role === "ADMIN")
       ) {
-        const user = await readById(user_id);
+        const user = await readUserByIdService(user_id);
         if (!user) return res.json401();
         req.user = user;
         return next();

@@ -1,4 +1,4 @@
-import { readById } from "../dao/mongo/managers/users.manager.js";
+import { verifyUserService } from "../services/users.service.js"
 
 function register(req, res, next) {
   const { _id } = req.user;
@@ -7,7 +7,7 @@ function register(req, res, next) {
 }
 function login(req, res, next) {
   const { token } = req.user;
-  const opts = { maxAge: 60 * 60 * 24 * 7, httpOnly: true };
+  const opts = { maxAge: 1000 * 60 * 60 * 6, httpOnly: true };
   const message = "User logged in!";
   const response = "OK";
   return res.cookie("token", token, opts).json200(response, message);
@@ -32,5 +32,21 @@ async function online(req, res, next) {
     online: true,
   });
 }
+async function verify(req, res, next) {
+  const { email, verifyCode } = req.body
+    const response = await verifyUserService(email, verifyCode)
+    if (response) {
+        const message = "User verified"
+        return res.json200("OK", message)
+    } else {
+        return res.json401()
+    }
+}
+async function resetPassword(req, res, next) {
+  const { _id } = req.user;
+  const message = "Password Reseted!";
+  return res.json201(_id, message);
+  
+}
 
-export { register, login, signout, google, online }
+export { register, login, signout, google, online, verify, resetPassword }

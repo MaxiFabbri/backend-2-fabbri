@@ -15,6 +15,8 @@ const schema = new Schema({
     stock: {type: Number, required: true, default: 10 },
     category: {type: String, enum: ["bazar","electro","textil","grafica"], required: true, default: "bazar" },
     thumbnails: {type:[String], required: false}
+},{
+    timestamps: true
 })
 schema.plugin(mongoosePaginate)
 

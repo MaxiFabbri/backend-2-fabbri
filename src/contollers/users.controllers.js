@@ -1,4 +1,10 @@
-import { createUserService, readUserService, updateUserService, destroyUserService } from "../services/users.service.js"
+import {
+    createUserService,
+    readUserService,
+    updateUserService,
+    destroyUserService,
+    verifyUserService
+} from "../services/users.service.js"
 
 async function createUser(req, res) {
     const message = "USER CREATED";
@@ -24,4 +30,5 @@ async function destroyUser(req, res) {
     const response = await destroyUserService(id);
     return res.status(200).json({ response, message });
 }
+
 export { createUser, readUsers, updateUser, destroyUser }

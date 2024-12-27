@@ -1,5 +1,5 @@
 import CustomRouter from "../../utils/CustomRouter.util.js";
-import { createCart, readCartsFromUser, updateCart, destroyCart } from "../../contollers/carts.controllers.js"
+import { createCart, readCartsFromUser, updateCart, destroyCart, addItemToCart, removeItemFromCart } from "../../contollers/carts.controllers.js"
 
 class CartsApiRouter extends CustomRouter {
   constructor() {
@@ -9,6 +9,8 @@ class CartsApiRouter extends CustomRouter {
   init = () => {
     this.create("/", ["USER"], createCart);
     this.read("/:user_id", ["USER", "ADMIN"], readCartsFromUser);
+    this.update("/addProduct/:cartId/:productId/:quantity",["USER"], addItemToCart)
+    this.destroy("/removeProduct/:cartId/:productId/:quantity",["USER"], removeItemFromCart)
     this.update("/:id", ["USER", "ADMIN"], updateCart);
     this.destroy("/:id", ["USER", "ADMIN"], destroyCart);
   };

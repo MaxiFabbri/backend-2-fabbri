@@ -10,9 +10,11 @@ const schema = new Schema({
     email: { type: String, required: true, index: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, default: 'USER', enum: ['USER','ADMIN','PREM'] },
-    verifyUser: { type: Boolean, default: false },
-    verifyCode: { type: String, default: "1234" },
+    verifyCode: { type: String, required: true },
+    verifiedUser: { type: Boolean, default: false },
     isOnline: { type: Boolean, default: false }
+},{
+    timestamps: true
 })
 
 const User = model(collection, schema)

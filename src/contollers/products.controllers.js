@@ -1,4 +1,10 @@
-import { createProductService, readProductService, readProductPaginatedService, updateProductService, destroyProductService } from "../services/products.service.js"
+import {
+  createProductService,
+  readProductService,
+  readProductPaginatedService,
+  updateProductService,
+  destroyProductService
+} from "../services/products.service.js"
 
 async function createProduct(req, res) {
   const message = "PRODUCT CREATED";

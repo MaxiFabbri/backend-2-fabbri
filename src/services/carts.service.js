@@ -1,29 +1,29 @@
-import {
-    create,
-    readByUserId,
-    update,
-    destroy,
-  } from "../dao/mongo/managers/carts.manager.js";
+import dao from "../dao/index.factory.js"
+const { CartsManager } = dao
 
-  async function createCartService() {
-    const response = await create(data);
+  async function createCartService(data) {
+    const response = await CartsManager.create(data);
+    return response
+  }
+  async function readOneCartService(id) {
+    const response = await CartsManager.readById(id);
     return response
   }
 
   async function readByUserIdService(user_id) {
-    const response = await  readByUserId({ user_id })
+    const response = await  CartsManager.readByUserId( {user_id} )
     return response
   }
   
   async function updateCartService(id, data) {
-    const response = await update(id, data)
+    const response = await CartsManager.update(id, data)
     return response
   }
   
   async function destroyCartService() {
-    const response = await destroy(id)
+    const response = await CartsManager.destroy(id)
     return response
   }
   
 
-  export { createCartService, readByUserIdService, updateCartService, destroyCartService };
+  export { createCartService, readOneCartService, readByUserIdService, updateCartService, destroyCartService };

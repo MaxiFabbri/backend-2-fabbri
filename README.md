@@ -48,8 +48,8 @@ con credenciales de Administrador
 #### 2.4 ./api/carts
 con permisos de Usuario
 - "/"(POST) crea el cart si no hay uno en estado "reserved" para ese usuario, no permite enviar productos por Body
-- "/addProduct/:cartId/:productId/:quantity"(POST) agrega productos (de a uno) al cart o actualiza la cantidad, revisando el Stock y actualizandolo
-- "/removeProduct/:cartId/:productId/:quantity"(DELETE) quita productos (de a uno) del cart o actualiza la cantidad, revisando el Stock y actualizandolo
+- "/addProduct/:cartId/:productId/:quantity"(PUT) agrega productos (de a uno) al cart o actualiza la cantidad, revisando el Stock y actualizandolo
+- "/removeProduct/:cartId/:productId/:quantity"(PUT) quita productos (de a uno) del cart o actualiza la cantidad, revisando el Stock y actualizandolo
 con permiso de ADMIN o USER
 - "/:id"(PUT) permite actualizar el cart completo (no le veo mucha funcionalidad, salvo para cambiar el status)
 - "/:id"(DELETE) permite borrar el cart completo

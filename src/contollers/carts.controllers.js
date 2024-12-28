@@ -41,7 +41,36 @@ async function addItemToCart(req, res) {
 }
 
 async function removeItemFromCart(req, res) {
-  
+  const { cartId, productId, quantity } = req.params
+  const quantityInt = parseInt(quantity)
+  // Traigo los datos del cart y del Producto
+  const cart = await readOneCartService(cartId)
+  const product = await readProductByIdService(productId)
+  // Verifico si el Cart es existe
+  if (!cart) return res.json404()
+  const data = cart
+  // Verifico si el producto esta en el cart y si hay cantidad suficiente para descontar
+  // console.log("Remove Items: ",cart)
+  const productIndex = data.products.findIndex(
+    (produ) => produ.product_id._id.toString() === productId
+  );
+  // Actualizo la cantidad y el Total
+  if(productIndex === -1){
+    return res.json404()
+  } else if (data.products[productIndex].quantity < quantityInt){
+    return res.json403()
+  } 
+  // Resto los items del cart y los sumo al stock
+  data.products[productIndex].quantity -= quantityInt
+  product.stock += quantityInt
+  await updateProductService(productId,product)
+
+  // resto el importe del total
+  data.total -= product.price * quantity  
+  data.user_id = cart.user_id._id
+  const response = updateCartService(cartId, data)
+  const message = "Item removed from cart";
+  return res.json201(response, message);
 }
 
 async function createCart(req, res) {
